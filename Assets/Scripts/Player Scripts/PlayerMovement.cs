@@ -11,6 +11,13 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 tempPos;
     private float xAxis, yAxis;
     private PlayerAnimation playerAnimation;
+    [SerializeField]
+    private float shootWaitTime = 0.5f;
+    private float waitBeforeShooting;
+    [SerializeField]
+    private float moveWaitTime = 0.3f;
+    private float waitBeforeMoving;
+    private bool canMove = true;
 
     private void Awake()
     {
@@ -22,6 +29,9 @@ public class PlayerMovement : MonoBehaviour
         HandleMovement();
         HandleAnimation();
         HandleFacingDirection();
+
+        HandleShooting();
+        CheckIfCanMove();
     }
 
     void HandleMovement()
@@ -29,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
         // Return -1, 0, 1 right away
         xAxis = Input.GetAxisRaw(TagManager.HORIZONTAL_AXIS);
         yAxis = Input.GetAxisRaw(TagManager.VERTICAL_AXIS);
+        
+        if (!canMove) return;
 
         tempPos = transform.position;
         tempPos.x += xAxis * moveSpeed * Time.deltaTime;
@@ -58,6 +70,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void HandleAnimation() {
+        if (!canMove) return;
+
         if (Mathf.Abs(xAxis) > 0 || Mathf.Abs(yAxis) > 0) playerAnimation.PlayAnimation(TagManager.WALK_ANIMATION_NAME);
         else playerAnimation.PlayAnimation(TagManager.IDLE_ANIMATION_NAME);
     }
@@ -65,5 +79,30 @@ public class PlayerMovement : MonoBehaviour
     void HandleFacingDirection() {
         if (xAxis > 0) playerAnimation.SetFacingDirection(true);
         else if (xAxis < 0) playerAnimation.SetFacingDirection(false);
+    }
+
+    void StopMovement() {
+        canMove = false;
+        waitBeforeMoving = Time.time + moveWaitTime;
+    }
+
+    void Shoot() {
+        waitBeforeShooting = Time.time + shootWaitTime;
+        StopMovement();
+        playerAnimation.PlayAnimation(TagManager.SHOOT_ANIMATION_NAME);
+    }
+
+    void CheckIfCanMove() {
+        if(Time.time > waitBeforeMoving) canMove = true;
+    }
+
+    void HandleShooting() {
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            if (Time.time > waitBeforeShooting)
+            {
+                Shoot();
+            }
+        }
     }
 }
