@@ -18,10 +18,12 @@ public class PlayerMovement : MonoBehaviour
     private float moveWaitTime = 0.3f;
     private float waitBeforeMoving;
     private bool canMove = true;
+    private PlayerShootingManager playerShootingManager;
 
     private void Awake()
     {
         playerAnimation = GetComponent<PlayerAnimation>();
+        playerShootingManager = GetComponent<PlayerShootingManager>();
     }
 
     private void Update()
@@ -46,25 +48,10 @@ public class PlayerMovement : MonoBehaviour
         tempPos.x += xAxis * moveSpeed * Time.deltaTime;
         tempPos.y += yAxis * moveSpeed * Time.deltaTime;
 
-        if (tempPos.x < minBound_X)
-        {
-            tempPos.x = minBound_X;
-        }
-
-        if (tempPos.x > maxBound_X)
-        {
-            tempPos.x = maxBound_X;
-        }
-
-        if (tempPos.y < minBound_Y)
-        {
-            tempPos.y = minBound_Y;
-        }
-
-        if (tempPos.y > maxBound_Y)
-        {
-            tempPos.y = maxBound_Y;
-        }
+        if (tempPos.x < minBound_X) tempPos.x = minBound_X;
+        if (tempPos.x > maxBound_X) tempPos.x = maxBound_X;
+        if (tempPos.y < minBound_Y) tempPos.y = minBound_Y;
+        if (tempPos.y > maxBound_Y) tempPos.y = maxBound_Y;
 
         transform.position = tempPos;
     }
@@ -90,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
         waitBeforeShooting = Time.time + shootWaitTime;
         StopMovement();
         playerAnimation.PlayAnimation(TagManager.SHOOT_ANIMATION_NAME);
+
+        playerShootingManager.Shoot(transform.localScale.x);
     }
 
     void CheckIfCanMove() {
@@ -99,10 +88,7 @@ public class PlayerMovement : MonoBehaviour
     void HandleShooting() {
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (Time.time > waitBeforeShooting)
-            {
-                Shoot();
-            }
+            if (Time.time > waitBeforeShooting) Shoot();
         }
     }
 }
