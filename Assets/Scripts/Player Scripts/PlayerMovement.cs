@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void CheckIfCanMove() {
-        if(Time.time > waitBeforeMoving) canMove = true;
+        if (Time.time > waitBeforeMoving) canMove = true;
     }
 
     void HandleShooting() {
