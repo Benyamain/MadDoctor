@@ -30,7 +30,8 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag(TagManager.ENEMY_TAG))
         {
-            // Deal damage
+            other.GetComponent<EnemyHealth>().TakeDamage(damageAmount);
+            Destroy(gameObject);
         }
     }
 }
