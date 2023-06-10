@@ -12,15 +12,20 @@ public class EnemyDamageArea : MonoBehaviour
     private bool canDealDamage;
     [SerializeField]
     private float damageAmount = 5f;
+    private PlayerHealth playerHealth;
 
     private void Awake() {
+        playerHealth = GameObject.FindWithTag(TagManager.PLAYER_TAG).GetComponent<PlayerHealth>();
         gameObject.SetActive(false);
     }
 
     private void Update() {
         if (Physics2D.OverlapCircle(transform.position, 1f, playerLayer))
         {
-            if (canDealDamage) canDealDamage = false;
+            if (canDealDamage) {
+                canDealDamage = false;
+                playerHealth.TakeDamage(damageAmount);
+            }
         }
 
         DeactivateDamageArea();

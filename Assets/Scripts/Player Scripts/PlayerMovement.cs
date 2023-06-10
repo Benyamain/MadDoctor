@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private float waitBeforeMoving;
     private bool canMove = true;
     private PlayerShootingManager playerShootingManager;
+    private bool playerDied;
 
     private void Awake()
     {
@@ -28,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (playerDied) return;
+
         HandleMovement();
         HandleAnimation();
         HandleFacingDirection();
@@ -90,5 +93,15 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Time.time > waitBeforeShooting) Shoot();
         }
+    }
+
+    public void PlayerDied() {
+        playerDied = true;
+        playerAnimation.PlayAnimation(TagManager.DEATH_ANIMATION_NAME);
+        Invoke("DestroyPlayerAfterDelay", 2f);
+    }
+
+    void DestroyPlayerAfterDelay() {
+        Destroy(gameObject);
     }
 }

@@ -20,6 +20,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private EnemyDamageArea enemyDamageArea;
     private bool enemyDied;
+    [SerializeField]
+    private RectTransform healthBarTransform;
+    private Vector3 healthBarTempScale;
 
     private void Awake() {
         playerTarget = GameObject.FindWithTag(TagManager.PLAYER_TAG).transform;
@@ -66,6 +69,13 @@ public class Enemy : MonoBehaviour
         else tempScale.x = -Mathf.Abs(tempScale.x);
 
         transform.localScale = tempScale;
+        
+        healthBarTempScale = healthBarTransform.localScale;
+
+        if (transform.localScale.x > 0f) healthBarTempScale.x = Mathf.Abs(healthBarTempScale.x);
+        else healthBarTempScale.x = -Mathf.Abs(healthBarTempScale.x);
+
+        healthBarTransform.localScale = healthBarTempScale;
     }
 
     void EnemyAttacked() {
