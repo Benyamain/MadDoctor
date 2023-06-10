@@ -13,5 +13,7 @@ public class PlayerShootingManager : MonoBehaviour
     GameObject newBullet = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
 
     if (facingDirection < 0) newBullet.GetComponent<Bullet>().SetNegativeSpeed();
+
+    SoundManager.instance.PlayShootSound();
    }
 }

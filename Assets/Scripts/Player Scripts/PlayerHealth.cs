@@ -18,7 +18,11 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damageAmount) {
         if (health <= 0f) return;
         health -= damageAmount;
-        if (health <= 0) playerMovement.PlayerDied();
+        if (health <= 0) {
+            playerMovement.PlayerDied();
+            GameplayController.instance.RestartGame();
+        }
+
         playerHealthSlider.value = health;
     }
 }
